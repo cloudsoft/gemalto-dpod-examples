@@ -1,0 +1,24 @@
+name: DPOD Example
+
+location: hackathon-cloud
+
+services:
+
+  - type: dpod-protected-server
+    name: "Server with DPOD client"
+
+    brooklyn.config:
+      dpod.oauth.uri: $brooklyn:external("gemalto", "dpod-oauth-uri")
+      dpod.rest.uri: $brooklyn:external("gemalto", "dpod-rest-uri")
+      dpod.username: $brooklyn:external("gemalto", "dpod-username")
+      dpod.password: $brooklyn:external("gemalto", "dpod-password")
+      dpod.service.name: myservice-clientonly
+      dpod.service.type: tde_database
+      dpod.client.name: client
+      system.user.password: password
+
+      partition.initialize: true
+      partition.label: hello
+      crypto.officer.password: password_co
+      security.officer.password: password_so
+      partition.domain: cloudsoft

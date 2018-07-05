@@ -1,0 +1,4 @@
+location: hackathon-cloud
+services:
+  - type: server
+

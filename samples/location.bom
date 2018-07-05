@@ -1,0 +1,18 @@
+brooklyn.catalog:
+  version: "1.0.0-SNAPSHOT" # GEMALTO_HACKATHON_VERSION
+  id: hackathon-cloud
+  name: "Oracle 12c on AWS eu-west-1"
+  itemType: location
+  description: |
+    Example location with (private) AMI for Oracle 12c.
+  item:
+    type: jclouds:aws-ec2
+    brooklyn.config:
+      identity: AAAAAAAAAAAAAAAAAAAA
+      credential: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      region: eu-west-1
+      imageId: eu-west-1/ami-3f573c46
+      keyPair: aledsage-dev-euwest1
+      loginUser: ec2-user
+      loginUser.privateKeyFile: /opt/amp/ssh/mock-keypair.pem
+      hardwareId: t2.large
