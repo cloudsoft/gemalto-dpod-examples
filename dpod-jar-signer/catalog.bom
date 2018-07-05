@@ -1,0 +1,44 @@
+brooklyn.catalog:
+  bundle: org.example.dpod-key-signer
+  version: "1.0.0-SNAPSHOT" # GEMALTO_HACKATHON_VERSION
+  items:
+
+    - classpath:custom-server.bom
+  
+    - id: "dpod-jar-signer"
+      name: "DPOD Jar Signer"
+      description: "A server configured with Gemalto DPOD"
+      iconUrl: classpath://icons/gemalto-padlock.png
+      itemType: entity
+      tags:
+        - gemalto-dpod-tile
+
+      item:
+        type: org.apache.brooklyn.entity.stock.BasicApplication
+        brooklyn.children:
+        
+          - type: dpod-token-manager
+            id: dpod-token-manager
+            name: DPOD REST API Token Manager
+    
+          - type: dpod-service
+            id: dpod-service
+            name: DPOD Service
+            brooklyn.config:
+              dpod.access.token: $brooklyn:entity("dpod-token-manager").attributeWhenReady("dpod.access.token")
+    
+          - type: org.apache.brooklyn.entity.software.base.SameServerEntity
+            name: "Server with DPOD"
+            brooklyn.children:
+    
+              - type: gemalto-dpod-client
+                id: gemalto-dpod-client
+                name: DPOD Client
+                brooklyn.config:
+                  dpod.access.token: $brooklyn:entity("dpod-token-manager").attributeWhenReady("dpod.access.token")
+                  dpod.service.id: $brooklyn:entity("dpod-service").attributeWhenReady("dpod.service.id")
+        
+              - type: jar-signer-server
+                name: Customer Server Configuration
+                brooklyn.config:
+                  latch.start: $brooklyn:entity("gemalto-dpod-client").attributeWhenReady("service.isUp")

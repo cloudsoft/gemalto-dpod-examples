@@ -1,0 +1,54 @@
+brooklyn.catalog:
+  version: "1.0.0-SNAPSHOT" # GEMALTO_HACKATHON_VERSION
+  items:
+
+    - id: jar-signer-server
+      name: "Custom Server Configuration"
+      description: "Customer server configuration, using Gemalto DPOD"
+      iconUrl: classpath://icons/gemalto-padlock.png
+      itemType: entity
+      item:
+        type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+        name: "Server Configuration"
+
+        brooklyn.config:
+          shell.env:
+            CRYPTO_HOME: "/opt/dpod/"
+            CRYPTO_LIB: "/opt/dpod/libs/64/libCryptoki2.so"
+            STORE_PASSWORD: $brooklyn:config("crypto.officer.password")
+            PARTITION_NAME: $brooklyn:config("partition.label")
+            JAR_URL: http://hackathon:rightPonyCellPaperclip@developers-origin.cloudsoftcorp.com/gemalto-hackathon/example.jar
+            KEY_ALIAS: example1
+            KEYSTORE_FILENAME: example_keystore
+
+          files.install:
+            "classpath://scripts/install.sh": install.sh
+
+          files.runtime:
+            "classpath://scripts/launch.sh": launch.sh
+            "classpath://scripts/checkRunning.sh": checkRunning.sh
+            "classpath://scripts/sign-jar.sh": sign-jar.sh
+
+          install.command: |
+            chmod a+x install.sh
+            ./install.sh
+
+          launch.command: |
+            chmod a+x checkRunning.sh
+            chmod a+x sign-jar.sh
+            chmod a+x launch.sh
+            ./launch.sh
+
+          checkRunning.command: |
+            ./checkRunning.sh
+
+        brooklyn.initializers:
+          - type: org.apache.brooklyn.core.effector.ssh.SshCommandEffector
+            brooklyn.config:
+              name: signJar
+              description: Echo a small hello string to the netcat entity
+              parameters:
+                jarUrl:
+                  description: URL of the jar to be signed
+              command: |
+                ./sign-jar.sh $jarUrl
