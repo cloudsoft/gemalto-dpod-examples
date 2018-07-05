@@ -1,0 +1,36 @@
+brooklyn.catalog:
+  version: "1.0.0-SNAPSHOT" # GEMALTO_HACKATHON_VERSION
+  items:
+
+    - id: custom-server
+      name: "Custom Server Configuration"
+      description: "Customer server configuration, using Gemalto DPOD"
+      iconUrl: classpath://icons/gemalto-padlock.png
+      itemType: entity
+      item:
+        type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+        name: "Server Configuration"
+  
+        brooklyn.config:
+          shell.env:
+            CRYPTO_HOME: "/opt/dpod/"
+            CRYPTO_LIB: "/opt/dpod/libs/64/libCryptoki2.so"
+
+          files.install:
+            "classpath://scripts/install.sh": install.sh
+  
+          files.runtime:
+            "classpath://scripts/launch.sh": launch.sh
+            "classpath://scripts/checkRunning.sh": checkRunning.sh
+  
+          install.command: |
+            chmod a+x install.sh
+            ./install.sh
+  
+          launch.command: |
+            chmod a+x launch.sh
+            chmod a+x checkRunning.sh
+            ./launch.sh
+
+          checkRunning.command: |
+            ./checkRunning.sh
