@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+
+    cloudsoft-amp:
+        image: eu.gcr.io/cloudsoft-qa/cloudsoft/amp-internal:ci-latest
+        ports:
+          - "8082:8081"
+        volumes:
+          - ./docker/amp/etc/brooklyn.cfg:/etc/amp/brooklyn.cfg
+          - ./docker/amp/ssh/:/opt/amp/ssh/
+          - ./docker/amp/persisted-state/:/opt/amp/persisted-state-foo/
+    dpod-ui:
+        depends_on:
+          - cloudsoft-amp
+        image: dpod-ui
+        environment:
+            UAA_URL: https://cloudsoft.uaa.system.mayfly.dpsas.io
+            API_URL: https://cloudsoft.market.staging-dpondemand.io
+            AMP_URL: http://cloudsoft-amp:8081
+            AMP_AUTH: admin:password
+        ports:
+          - "8080:80"
