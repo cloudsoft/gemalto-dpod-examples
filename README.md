@@ -2,12 +2,13 @@
 
 ## Contents
 
-[Introduction(#introduction)
-[Prerequisites](#prerequisites)
-[Before the Hackathon](#before-the-hackathon)
-[Setup and Running](#setup-and-running)
-[Customizing the Automation](#customizing-the-automation)
-[Cloudsoft AMP: Under the Covers](#cloudsoft-amp-under-the-covers)
+* [Introduction](#introduction)
+* [Prerequisites](#prerequisites)
+* [Before the Hackathon](#before-the-hackathon)
+* [Setup and Running](#setup-and-running)
+* [Other Useful Commands](#other-useful-commands)
+* [Customizing the Automation](#customizing-the-automation)
+* [Cloudsoft AMP: Under the Covers](#cloudsoft-amp-under-the-covers)
 
 
 ## Introduction
@@ -73,25 +74,26 @@ of time (e.g. waiting for downloads).
 
 2. Download the docker images:
 
-  ```bash
-  docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/amp:latest
-  docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/dpod-ui:latest
-  ```
+   ```bash
+   docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/amp:latest
+   docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/dpod-ui:latest
+   ```
+
 3. Download and install the Cloudsoft AMP command line tool (named `br` - the name
-  comes from Apache Brooklyn, on which AMP is built).
+   comes from Apache Brooklyn, on which AMP is built).
 
-  1. Download from http://developers-origin.cloudsoftcorp.com/amp-cli/5.2.0/
+   1. Download from http://developers-origin.cloudsoftcorp.com/amp-cli/5.2.0/
 
-  2. Make the file executable: `chmod u+x br`
+   2. Make the file executable: `chmod u+x br`
 
-  3. Add the file to your path. For example:
+   3. Add the file to your path. For example:
 
-     ```bash
-     mkdir ~/bin/
-     mv br ~/bin/
-     echo "export PATH=$PATH:~/bin/" >> ~/.bashrc
-     source ~/.bashrc
-     ```
+      ```bash
+      mkdir ~/bin/
+      mv br ~/bin/
+      echo "export PATH=$PATH:~/bin/" >> ~/.bashrc
+      source ~/.bashrc
+      ```
 
 
 ## Setup and Running
@@ -102,7 +104,11 @@ of time (e.g. waiting for downloads).
    git clone https://github.com/cloudsoft/gemalto-dpod-examples.git
    ```
 
-1. Customize the endpoints for your own environment:
+1. Customize the endpoints for your own environment.
+
+   (These configuration values will subsequent be used _inside_ the docker containers,
+   by a combination of passing environment variables, and mounting files/directories from
+   your local disk into the container).
 
    1. Modify `docker/amp/etc/brooklyn.cfg` to set the URIs, username and password
       for your DPOD login (using the 'application owner' account).
@@ -125,19 +131,6 @@ of time (e.g. waiting for downloads).
 
    ```bash
    docker-compose up -d
-   ```
-
-   Other useful commands include:
-
-   ```bash
-   # List the containers
-   docker ps
-
-   # View the logs from the containers
-   docker-compose logs | less
-
-   # Shutdown the containers
-   docker-compose down
    ```
 
 3. Go to the DPOD web-console (i.e. http://localhost:8080/).
@@ -223,7 +216,7 @@ of time (e.g. waiting for downloads).
      * _Private key_: ssh private key to use when ssh'ing
      * _Password_: password to use when ssh'ing
    * If provisioning automatically in a cloud:
-     * _Location_: the location id within Cloudsoft AMP (see step 5.2)
+     * _Location_: the location id within Cloudsoft AMP, such as 'hackathon-cloud' (see step 5.2)
    * _Service Type_: the type of DPOD service (e.g. 'tde_database', 'digital_signing', etc)
    * _Initialize_: whether to create a new partition (true/false)
    * _Partition Label_
@@ -241,6 +234,22 @@ of time (e.g. waiting for downloads).
     b. Debug any problems by clicking on the failed activity in the 'kilt diagram', in the activity view.
 
     c. View the AMP log file by running `docker-compose logs | less`.
+
+
+## Other Useful Commands
+
+Other useful docker commands include:
+
+```bash
+# List the running containers
+docker ps
+
+# View the logs from the containers
+docker-compose logs | less
+
+# Shutdown the containers, which were launched by docker-compose
+docker-compose down
+```
 
 
 ## Customizing the Automation
@@ -309,6 +318,9 @@ for a `catalog.bom` at the root of the bundle, and all its items (including othe
 Catalog items can have tags. Here we use a special tag 'gemalto-dpod-tile'. When
 the DPOD marketplace is being populated, it queries Cloudsoft AMP (using its
 REST api, and filters for only those catalog items with this tag).
+
+Catalog bundles and items are versioned. However, if the version suffix ends in
+'snapshot', then you can overwrite it (without requiring the 'force' parameter).
 
 
 ### Deploying Applications
