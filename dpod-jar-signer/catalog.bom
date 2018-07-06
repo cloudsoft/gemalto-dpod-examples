@@ -4,7 +4,7 @@ brooklyn.catalog:
   items:
 
     - classpath:custom-server.bom
-  
+
     - id: "dpod-jar-signer"
       name: "DPOD Jar Signer"
       description: "A server configured with Gemalto DPOD"
@@ -15,29 +15,36 @@ brooklyn.catalog:
 
       item:
         type: org.apache.brooklyn.entity.stock.BasicApplication
+        brooklyn.enrichers:
+          - type: org.apache.brooklyn.enricher.stock.Propagator
+            brooklyn.config:
+              enricher.producer: $brooklyn:entity("server")
+              propagating:
+                - $brooklyn:sensor("host.address")
+
         brooklyn.children:
-        
           - type: dpod-token-manager
             id: dpod-token-manager
             name: DPOD REST API Token Manager
-    
+
           - type: dpod-service
             id: dpod-service
             name: DPOD Service
             brooklyn.config:
               dpod.access.token: $brooklyn:entity("dpod-token-manager").attributeWhenReady("dpod.access.token")
-    
+
           - type: org.apache.brooklyn.entity.software.base.SameServerEntity
+            id: server
             name: "Server with DPOD"
             brooklyn.children:
-    
+
               - type: gemalto-dpod-client
                 id: gemalto-dpod-client
                 name: DPOD Client
                 brooklyn.config:
                   dpod.access.token: $brooklyn:entity("dpod-token-manager").attributeWhenReady("dpod.access.token")
                   dpod.service.id: $brooklyn:entity("dpod-service").attributeWhenReady("dpod.service.id")
-        
+
               - type: jar-signer-server
                 name: Customer Server Configuration
                 brooklyn.config:
