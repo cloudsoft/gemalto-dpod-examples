@@ -12,12 +12,11 @@ brooklyn.catalog:
       credential: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       region: eu-west-1
       keyPair: xxxxxxxxxxxx
-      loginUser.privateKeyFile: /opt/amp/ssh/xxxxxxxxxxxx.pem
+      loginUser.privateKeyFile: /home/amp/.ssh/xxxxxxxxxxxx.pem
       hardwareId: t2.large
 
       # Optionally specify an explicit image (e.g. AMI in AWS), and the
       # user name for first ssh'ing to that VM (e.g. using the keypair .pem
       # file in AWS).
       imageId: eu-west-1/ami-xxxxxxxx
-      loginUser: ec2-user
-
+      loginUser: xxxxxxxx
