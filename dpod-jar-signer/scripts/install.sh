@@ -26,6 +26,13 @@ fi
 
 
 ###
+ # Workaround for old CentOS 7 VMs.
+ # See https://issues.apache.org/jira/browse/BROOKLYN-588
+ ##
+sudo yum update -y curl nss
+
+
+###
  # Install Java.
  ##
 sudo yum install -y java-1.8.0-openjdk-devel
