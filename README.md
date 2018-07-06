@@ -1,5 +1,15 @@
 # Gemalto DPOD Automation Examples
 
+## Contents
+
+[Introduction(#introduction)
+[Prerequisites](#prerequisites)
+[Before the Hackathon](#before-the-hackathon)
+[Setup and Running](#setup-and-running)
+[Customizing the Automation](#customizing-the-automation)
+[Cloudsoft AMP: Under the Covers](#cloudsoft-amp-under-the-covers)
+
+
 ## Introduction
 
 This repo contains example automation code for setting up DPOD services, and instructions for how to
@@ -15,6 +25,11 @@ At a high-level, the steps are:
 If you want to write your own automation code, then step (3) will first involve modifying/extending
 one of the examples.
 
+These steps will involve us working with several different machines:
+* Local machine, for working on the code and running Docker.
+* Docker containers, for running the DPOD UI and Cloudsoft AMP.
+* A VM in the cloud, which we will set up to use DPOD.
+
 
 ## Prerequisites
 
@@ -24,23 +39,59 @@ one of the examples.
 
    For example:
    * https://cloudsoft.market.staging-dpondemand.io
-       https://cloudsoft.uaa.system.mayfly.dpsas.io
+   * https://cloudsoft.uaa.system.mayfly.dpsas.io
 
-2. The DPOD oath endpoint configured to whitelist redirect back to localhost:8080 (this is for 'dev mode',
+   The DPOD oath endpoint configured to whitelist redirect back to localhost:8080 (this is for 'dev mode',
    where we can use a custom local marketplace UI).
 
-3. Docker installed and ready to use. This could be on your laptop, or on a remote machine.
+2. [Docker](https://www.docker.com/community-edition#/download) installed and ready to use.
+   This could be on your laptop, or on a remote machine.
 
    If using a remote machine, you will require:
 
     * ssh access (to run the docker commands, etc)
     * access to TCP ports 8080 and 8081.
 
-4. Ability to provision a VM (in a cloud of your choice), or ssh access to a pre-existing machine
+3. [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed locally.
+
+4. A github account, for sharing private repos with you.
+
+5. Ability to provision a VM (in a cloud of your choice), or ssh access to a pre-existing machine
    on which automated commands can be run.
 
    This machine will require outbound internet access, to DPOD and to install additional packages
    as necessary.
+
+
+## Before the Hackathon
+
+There are several steps you can do ahead of the hackathon, which can save a lot
+of time (e.g. waiting for downloads).
+
+1. Ensure the [prerequisites](https://github.com/cloudsoft/gemalto-dpod-examples#prerequisites)
+  are met.
+
+2. Download the docker images:
+
+  ```bash
+  docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/amp:latest
+  docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/dpod-ui:latest
+  ```
+3. Download and install the Cloudsoft AMP command line tool (named `br` - the name
+  comes from Apache Brooklyn, on which AMP is built).
+
+  1. Download from http://developers-origin.cloudsoftcorp.com/amp-cli/5.2.0/
+
+  2. Make the file executable: `chmod u+x br`
+
+  3. Add the file to your path. For example:
+
+     ```bash
+     mkdir ~/bin/
+     mv br ~/bin/
+     echo "export PATH=$PATH:~/bin/" >> ~/.bashrc
+     source ~/.bashrc
+     ```
 
 
 ## Setup and Running
@@ -54,7 +105,7 @@ one of the examples.
 1. Customize the endpoints for your own environment:
 
    1. Modify `docker/amp/etc/brooklyn.cfg` to set the URIs, username and password
-      for your DPOD login.
+      for your DPOD login (using the 'application owner' account).
 
    2. Modify `docker-compose.yaml` to set the URIs for your DPOD login
       (i.e. environment variables `UAA_URL` and `API_URL`).
@@ -64,6 +115,7 @@ one of the examples.
       1. (Optional) See 5.2 for creating a location, such as AWS which uses a keypair .pem file.
 
       2. (Optional) Replace the id_rsa files, which are used when setting up a user on a newly provisioned VM.
+         If you skip this step, the default id_rsa key from this repo will be used.
 
          ```bash
          ssh-keygen -t rsa -N "" -f docker/amp/ssh/id_rsa
@@ -106,9 +158,17 @@ one of the examples.
       br login http://localhost:8081 admin password
       ```
 
-   2. (Optional) You can deploy to a public or private cloud. Create a *location* with details of that cloud.
+   2. Add the DPOD application building blocks to the Cloudsoft AMP catalog:
 
-      For detailed instructions, see https://docs.cloudsoft.io/locations/
+      ```bash
+      br catalog add http://hackathon:rightPonyCellPaperclip@developers-origin.cloudsoftcorp.com/gemalto-hackathon/dpod-1.1.0-SNAPSHOT.jar
+      ```
+
+   3. (Optional) You can deploy to a public or private cloud (or alternatively skip this step,
+      and use a pre-existing target machine).
+
+      Create a *location* with details of that cloud. For detailed instructions,
+      see https://docs.cloudsoft.io/locations/
 
       As an example, see `samples/location.bom`. You can modify this to add your Cloud credentials,
       and a reference to your AWS keypair file (see 1.3.1). Other clouds, including GCE and Azure, are also
@@ -118,12 +178,6 @@ one of the examples.
 
       ```bash
       br catalog add samples/location.bom
-      ```
-
-   3. Add the DPOD application building blocks to the Cloudsoft AMP catalog:
-
-      ```bash
-      br catalog add http://hackathon:rightPonyCellPaperclip@developers-origin.cloudsoftcorp.com/gemalto-hackathon/dpod-1.1.0-SNAPSHOT.jar
       ```
 
 6. (Optional) Test the above location by deploying a simple app, which provisions a VM:
@@ -187,3 +241,91 @@ one of the examples.
     b. Debug any problems by clicking on the failed activity in the 'kilt diagram', in the activity view.
 
     c. View the AMP log file by running `docker-compose logs | less`.
+
+
+## Customizing the Automation
+
+The [Setup and Run](#setup-and-run) steps above used the "DPOD Jar Signer" as an example.
+You can use this example as a starting point for your use-case.
+
+The file structure is:
+```
+catalog.bom
+custom-server.bom
+scripts/launch.sh
+scripts/sign-jar.sh
+scripts/install.sh
+scripts/checkRunning.sh
+icons/gemalto-padlock.png
+```
+
+Let's start with the scripts. These are executed when setting up the VM in the
+cloud. You can replace these scripts with your own commands.
+
+There is a 'blueprint' that defines how and when these scripts should be executed.
+The `custom-server.bom` file is a Cloudsoft AMP blueprint. It's basic structure is:
+* starts with `brooklyn.catalog`, because it is defining an item to be added to the
+  catalog rather than a blueprint being used to provisioning machines immediately.
+* contains metadata about the catalog item.
+* defines the actual catalog item: its type and its configuration.
+
+However, `custom-server.bom` assumes that the DPOD Luna Client has already been installed.
+This is the job of the main `catalog.bom`. Here is a brief overview of its structure:
+* You'll see at the very end of that file, there is a reference to `jar-signer-server`
+  (which is the catalog item id declared in `custom-server.bom`).
+* The file also references `gemalto-dpod-client`, which has the code to install the
+  DPOD Luna Client.
+* Both of these are 'children' of a `SameServerEntity`. This is the entity that will
+  cause the VM to be provisioned (where it provisions the VM is not declared here;
+  that will depend on which location is used during the actual deployment).
+* The `dpod-service` entity makes the REST api calls to create the DPOD partition.
+  To do that, it needs to be configured with an access token.
+* The `dpod-token-manager` entity does the oauth authentication to get the access
+  token.
+
+## Cloudsoft AMP: Under the Covers
+
+### Apache Brooklyn
+
+Cloudsoft AMP is built on the open source project Apache Brooklyn.
+
+Blueprints written in Cloudsoft AMP can also be run in Apache Brooklyn (though
+some blueprints rely on other catalog items that are in Cloudsoft AMP but not
+in Brooklyn).
+
+Useful links include:
+* [Apache Brooklyn](https://brooklyn.apache.org/)
+* [Cloudsoft AMP](https://cloudsoft.io/platform/amp/)
+* [Cloudsoft AMP docs](https://docs.cloudsoft.io/)
+
+
+### Catalog
+
+When we run the command `br catalog add dpod-jar-signer/`, it bundles up the contents
+of the directory and pushes it to the Cloudsoft AMP catalog. By convention, it will look
+for a `catalog.bom` at the root of the bundle, and all its items (including other
+`.bom` files that it links to).
+
+Catalog items can have tags. Here we use a special tag 'gemalto-dpod-tile'. When
+the DPOD marketplace is being populated, it queries Cloudsoft AMP (using its
+REST api, and filters for only those catalog items with this tag).
+
+
+### Deploying Applications
+
+So far, we have just talked about adding things to the catalog.
+
+One can deploy a blueprint, which says which catalog item(s) to deploy and
+which location(s) to deploy to.
+
+There was an optional step of testing this (step 6 of the [Setup and Run](#setup-and-run)):
+
+```yaml
+location: hackathon-cloud
+services:
+  - type: server
+```
+
+When you use the marketplace tile to deploy, it automatically creates a YAML file
+(following the same principles as the simple example above), and sends a POST request
+to the Cloudsoft AMP rest API, which deploys that app.
