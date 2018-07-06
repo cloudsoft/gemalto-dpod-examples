@@ -207,7 +207,7 @@ of time (e.g. waiting for downloads).
 
 9. Deploy this service by clicking on the tile, and filling out the options:
 
-   * _Service Name_: name of the app within Cloudsoft AMP.
+   * _Service Name_: the name you want to give your service, being created in DPOD.
    * _Target Environment_: whether provisioning a new Cloud VM, or configuring an existing server.
    * If using an existing server:
      * _Connection Type_: ssh key or password
@@ -341,3 +341,9 @@ services:
 When you use the marketplace tile to deploy, it automatically creates a YAML file
 (following the same principles as the simple example above), and sends a POST request
 to the Cloudsoft AMP rest API, which deploys that app.
+
+
+### Cloudsoft AMP Glossary
+
+There is a [glossary](https://docs.cloudsoft.io/start/concept-quickstart.html)
+in the main Cloudsoft AMP docs.
