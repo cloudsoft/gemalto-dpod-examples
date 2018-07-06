@@ -47,7 +47,9 @@ one of the examples.
 
 0. Clone this gihub repository:
 
-    git clone https://github.com/cloudsoft/gemalto-dpod-examples.git
+   ```bash
+   git clone https://github.com/cloudsoft/gemalto-dpod-examples.git
+   ```
 
 1. Customize the endpoints for your own environment:
 
