@@ -1,4 +1,4 @@
-name: DPOD Example
+name: DPOD Jar Signer Example
 
 location: hackathon-cloud
 
@@ -7,11 +7,15 @@ services:
   - type: dpod-jar-signer
     name: "Jar Signer using DPOD"
 
+    brooklyn.tags:
+      - "gemalto-dpod-tile"
+
     brooklyn.config:
       dpod.oauth.uri: $brooklyn:external("gemalto", "dpod-oauth-uri")
       dpod.rest.uri: $brooklyn:external("gemalto", "dpod-rest-uri")
       dpod.username: $brooklyn:external("gemalto", "dpod-username")
       dpod.password: $brooklyn:external("gemalto", "dpod-password")
+
       dpod.service.name: myservice-jarsigner
       dpod.service.type: digital_signing
       dpod.client.name: client
@@ -21,4 +25,9 @@ services:
       partition.label: hello
       crypto.officer.password: password_co
       security.officer.password: password_so
-      partition.domain: cloudsoft
+      partition.domain: xxxxxxxx
+
+      gemalto-dpod-details:
+        serviceCategory": "cloudsoft_amp",
+        created_at": "Mon Jul 02 2018 00:02:13 GMT+0100 (British Summer Time)",
+        created_by_username": "xxxxxxxx"

@@ -16,7 +16,9 @@ brooklyn.catalog:
       hardwareId: t2.large
 
       # Optionally specify an explicit image (e.g. AMI in AWS), and the
-      # user name for first ssh'ing to that VM (e.g. using the keypair .pem
-      # file in AWS).
-      imageId: eu-west-1/ami-xxxxxxxx
-      loginUser: xxxxxxxx
+      # user name for first ssh'ing to that VM (the username depends on the
+      # image - common values are 'ubuntu', 'centos' and 'ec2-user').
+
+      # imageId: eu-west-1/ami-xxxxxxxx
+      # loginUser: xxxxxxxx
+

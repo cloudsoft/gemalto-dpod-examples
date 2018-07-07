@@ -173,9 +173,9 @@ of time (e.g. waiting for downloads).
       Create a *location* with details of that cloud. For detailed instructions,
       see https://docs.cloudsoft.io/locations/
 
-      As an example, see `samples/location.bom`. You can modify this to add your Cloud credentials,
-      and a reference to your AWS keypair file (see 1.3.1). Other clouds, including GCE and Azure, are also
-      supported.
+      As an example, see [samples/location.bom](samples/location.bom). You can modify this to add your Cloud credentials,
+      the name of the AWS keypair to use, and a reference to your AWS keypair file (see 1.3.1). Other clouds, including
+      GCE and Azure, are also supported.
 
       To add this location to the catalog, run:
 
@@ -185,7 +185,7 @@ of time (e.g. waiting for downloads).
 
 6. (Optional) Test the above location by deploying a simple app, which provisions a VM:
 
-   Create a file (e.g. samples/vanilla-server.yaml) containing:
+   Create a file (e.g. [samples/vanilla-server.yaml](samples/vanilla-server.yaml)) containing:
 
    ```yaml
    location: hackathon-cloud
@@ -241,9 +241,7 @@ of time (e.g. waiting for downloads).
 
     a. See the activity in the "App Inspector" view, by clicking on the entity in the tree, and selecting the 'Activities' tab.
 
-    b. Debug any problems by clicking on the failed activity in the 'kilt diagram', in the activity view.
-
-    c. View the AMP log file by running `docker-compose logs | less`.
+    b. To investigate problems, see the [Troubleshooting](#troubleshooting) section.
 
 
 ## Other Useful Commands
@@ -309,8 +307,8 @@ This is the job of the main `catalog.bom`. Here is a brief overview of its struc
 Cloudsoft AMP is built on the open source project Apache Brooklyn.
 
 Blueprints written in Cloudsoft AMP can also be run in Apache Brooklyn (though
-some blueprints rely on other catalog items that are in Cloudsoft AMP but not
-in Brooklyn).
+some blueprints rely on other catalog items that are shipped with Cloudsoft AMP but
+are not in Brooklyn).
 
 Useful links include:
 * [Apache Brooklyn](https://brooklyn.apache.org/)
@@ -352,8 +350,38 @@ When you use the marketplace tile to deploy, it automatically creates a YAML fil
 (following the same principles as the simple example above), and sends a POST request
 to the Cloudsoft AMP rest API, which deploys that app.
 
+An example of the auto-generated YAML from the marketplace tile is at
+[samples/app-jar-signer.yaml](samples/app-jar-signer.yaml). You can also deploy this
+directly to your AMP server:
+
+```bash
+br deploy samples/app-jar-signer.yaml
+```
+
 
 ### Cloudsoft AMP Glossary
 
 There is a [glossary](https://docs.cloudsoft.io/start/concept-quickstart.html)
 in the main Cloudsoft AMP docs.
+
+
+### Troubleshooting
+
+For more troubleshooting advice, see the
+[Troubleshooting section of the AMP docs](https://docs.cloudsoft.io/operations/troubleshooting/).
+A few pointers are also given below.
+
+#### Web Console
+
+The activity and state of each entity in the application can be viewed in the AMP
+web console (e.g. at http://localhost:8081). Go to the "App Inspector", click on the
+entity in the tree, and select the 'Activities' tab.
+
+The 'kilt diagram' gives a visual representation of the hierarchy and sequence of
+tasks being that are executed. Failed tasks are coloured bright red. Click on a
+failed task to drill into its details.
+
+### AMP Logs
+
+View the AMP log file in `docker/amp/log/` (this directory on your local machine
+is mounted in the AMP container).
