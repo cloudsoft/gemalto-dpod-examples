@@ -29,7 +29,7 @@ one of the examples.
 These steps will involve us working with several different machines:
 * Local machine, for working on the code and running Docker.
 * Docker containers, for running the DPOD UI and Cloudsoft AMP.
-* A VM in the cloud, which we will set up to use DPOD.
+* A VM in the cloud, which we will set up to use the HSM.
 
 
 ## Prerequisites
