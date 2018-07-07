@@ -6,8 +6,8 @@
 * [Prerequisites](#prerequisites)
 * [Before the Hackathon](#before-the-hackathon)
 * [Setup and Running](#setup-and-running)
-* [Other Useful Commands](#other-useful-commands)
 * [Customizing the Automation](#customizing-the-automation)
+* [Other Docker Commands](#other-docker-commands)
 * [Cloudsoft AMP: Under the Covers](#cloudsoft-amp-under-the-covers)
 
 
@@ -102,23 +102,28 @@ of time (e.g. waiting for downloads).
 
    ```bash
    git clone https://github.com/cloudsoft/gemalto-dpod-examples.git
+   cd gemalto-dpod-examples
    ```
+
+   (All paths used in these steps are relative to the root directory of this repo.)
 
 1. Customize the endpoints for your own environment.
 
-   (These configuration values will subsequent be used _inside_ the docker containers,
+   (These configuration values will subsequently be used _inside_ the docker containers,
    by a combination of passing environment variables, and mounting files/directories from
    your local disk into the container).
 
-   1. Modify `docker/amp/etc/brooklyn.cfg` to set the URIs, username and password
-      for your DPOD login (using the 'application owner' account).
+   (The text to be replaced in the configuration files uses placeholder 'xxxxxxxx'.)
 
-   2. Modify `docker-compose.yaml` to set the URIs for your DPOD login
+   1. Modify `docker-compose.yaml` to set the URIs for your DPOD login
       (i.e. environment variables `UAA_URL` and `API_URL`).
+
+   2. Modify `docker/amp/etc/brooklyn.cfg` to set the URIs, username and password
+      for your DPOD login (using the 'application owner' account).
 
    3. (Optional) Add to `docker/amp/ssh/` any ssh keys that you will need later.
 
-      1. (Optional) See 5.2 for creating a location, such as AWS which uses a keypair .pem file.
+      1. (Optional) See 5.4 for creating a location, such as AWS which uses a keypair .pem file.
 
       2. (Optional) Replace the id_rsa files, which are used when setting up a user on a newly provisioned VM.
          If you skip this step, the default id_rsa key from this repo will be used.
@@ -146,35 +151,50 @@ of time (e.g. waiting for downloads).
 
    You will be redirected to the login page; once you login, you will be redirected back to localhost:8080.
 
-4. Open Cloudsoft AMP (e.g. if the above setup is used, this will be http://localhost:8081 with admin:password).
+4. Open Cloudsoft AMP (e.g. if the above setup is used, this will be http://localhost:8081
+   with credentials 'admin' and 'password').
 
    Wait for Cloudsoft AMP to start up (i.e. as reported in the AMP web-console).
 
 5. Populate the Cloudsoft AMP catalog:
 
-   1. Download the `br` command line tool.
+   1. Download and install the Cloudsoft AMP command line tool (named `br` - the name
+      comes from Apache Brooklyn, on which AMP is built).
 
-      FIXME: add instructions.
+      1. Download from http://developers-origin.cloudsoftcorp.com/amp-cli/5.2.0/
+
+      2. Make the file executable, and add it to your path. For example:
+
+         ```bash
+         chmod u+x br
+         mkdir ~/bin/
+         mv br ~/bin/
+         echo "export PATH=$PATH:~/bin/" >> ~/.bashrc
+         source ~/.bashrc
+         ```
+   2. Use `br` to login to the Cloudsoft AMP server:
 
       ```bash
       br login http://localhost:8081 admin password
       ```
 
-   2. Add the DPOD application building blocks to the Cloudsoft AMP catalog:
+   3. Add the DPOD application building blocks to the Cloudsoft AMP catalog:
 
       ```bash
       br catalog add http://hackathon:rightPonyCellPaperclip@developers-origin.cloudsoftcorp.com/gemalto-hackathon/dpod-1.1.0-SNAPSHOT.jar
       ```
 
-   3. (Optional) You can deploy to a public or private cloud (or alternatively skip this step,
+   4. (Optional) You can deploy to a public or private cloud (or alternatively skip this step,
       and use a pre-existing target machine).
 
-      Create a *location* with details of that cloud. For detailed instructions,
-      see https://docs.cloudsoft.io/locations/
+      Create a *location* with details of that cloud. For detailed instructions and
+      background information, see https://docs.cloudsoft.io/locations/.
 
-      As an example, see [samples/location.bom](samples/location.bom). You can modify this to add your Cloud credentials,
-      the name of the AWS keypair to use, and a reference to your AWS keypair file (see 1.3.1). Other clouds, including
-      GCE and Azure, are also supported.
+      As an example, see [samples/location.bom](samples/location.bom) in your local copy
+      of the repository. A wide range of clouds are supported, including AWS, GCE and Azure.
+      You can modify this to add your Cloud credentials ('identity' is the AWS Access Key id,
+      and 'credential' is the secret key), the name of the AWS keypair to use, and a reference
+      to your AWS keypair file (see 1.3.1).
 
       To add this location to the catalog, run:
 
@@ -182,39 +202,19 @@ of time (e.g. waiting for downloads).
       br catalog add samples/location.bom
       ```
 
-6. (Optional) Test the above location by deploying a simple app, which provisions a VM:
-
-   Create a file (e.g. [samples/vanilla-server.yaml](samples/vanilla-server.yaml)) containing:
-
-   ```yaml
-   location: hackathon-cloud
-   services:
-     - type: server
-   ```
-
-   Deploy this app:
-
-   ```bash
-   br deploy samples/vanilla-server.yaml
-   ```
-
-   If you prefer to use the graphical web-console rather than the CLI, you can use the Blueprint Composer
-   to write such blueprints graphically. For more information, see
-   https://docs.cloudsoft.io/tutorials/tutorial-3-ui-3tier.html
-
-7. Add the jar-signing demo to the Cloudsoft AMP catalog:
+6. Add the jar-signing demo to the Cloudsoft AMP catalog:
 
    ```bash
    br catalog add dpod-jar-signer/
    ```
 
-   This command bundles up the contents of the directory, and adds it to the Cloudsoft AMP catalog.
+   This command bundles up the contents of the directory and adds it to the Cloudsoft AMP catalog.
 
-8. Go back to DPOD web-console (http://localhost:8080/) and refresh the page.
+7. Go back to DPOD web-console (http://localhost:8080/) and refresh the page.
 
    You should now see a new marketplace tile for the "DPOD Jar Signer".
 
-9. Deploy this service by clicking on the tile, and filling out the options:
+8. Deploy this service by clicking on the tile, and filling out the options:
 
    * _Service Name_: the name you want to give your service, being created in DPOD.
    * _Target Environment_: whether provisioning a new Cloud VM, or configuring an existing server.
@@ -225,38 +225,24 @@ of time (e.g. waiting for downloads).
      * _Private key_: ssh private key to use when ssh'ing
      * _Password_: password to use when ssh'ing
    * If provisioning automatically in a cloud:
-     * _Location_: the location id within Cloudsoft AMP, such as 'hackathon-cloud' (see step 5.2)
-   * _Service Type_: the type of DPOD service (e.g. 'tde_database', 'digital_signing', etc)
+     * _Location_: the location id within Cloudsoft AMP, such as 'hackathon-cloud' (see step 5.4)
+   * _Service Type_: the type of DPOD service (e.g. 'digital_signing', 'tde_database', etc)
    * _Initialize_: whether to create a new partition (true/false)
-   * _Partition Label_
-   * _Partition Domain_
-   * _Security Officer password_
-   * _Crypto Officer Password_
+   * _Partition Label_: any label (minimum length 4 characters)
+   * _Partition Domain_: your choice of domain name (minimum length 4 characters)
+   * _Security Officer password_: (minimum 10 characters)
+   * _Crypto Officer Password_: (minimum 10 characters)
 
     Once deployed, refresh the page to see the service, and to see
-    the JAR Signer Service VM info (once available).
+    the JAR Signer Service VM address (once available).
 
-11. (Optional) Watch the progress in Cloudsoft AMP.
+9. (Optional) Watch the progress in Cloudsoft AMP.
 
-    a. See the activity in the "App Inspector" view, by clicking on the entity in the tree, and selecting the 'Activities' tab.
+   Click on the 'App Inspector' tile (or choose it from the top-right dropdown) to
+   then see a list of apps. Click on you app in the list, and expand it to see its
+   structure. Select the 'Activities' tab to see the tasks being executed.
 
-    b. To investigate problems, see the [Troubleshooting](#troubleshooting) section.
-
-
-## Other Useful Commands
-
-Other useful docker commands include:
-
-```bash
-# List the running containers
-docker ps
-
-# View the logs from the containers
-docker-compose logs | less
-
-# Shutdown the containers, which were launched by docker-compose
-docker-compose down
-```
+   To investigate problems, see the [Troubleshooting](#troubleshooting) section.
 
 
 ## Customizing the Automation
@@ -299,6 +285,23 @@ This is the job of the main `catalog.bom`. Here is a brief overview of its struc
 * The `dpod-token-manager` entity does the oauth authentication to get the access
   token.
 
+
+## Other Docker Commands
+
+Other useful docker commands include:
+
+```bash
+# List the running containers
+docker ps
+
+# View the logs from the containers
+docker-compose logs | less
+
+# Shutdown the containers, which were launched by docker-compose
+docker-compose down
+```
+
+
 ## Cloudsoft AMP: Under the Covers
 
 ### Apache Brooklyn
@@ -313,6 +316,35 @@ Useful links include:
 * [Apache Brooklyn](https://brooklyn.apache.org/)
 * [Cloudsoft AMP](https://cloudsoft.io/platform/amp/)
 * [Cloudsoft AMP docs](https://docs.cloudsoft.io/)
+
+
+### Web Console
+
+Cloudsoft AMP has a web-console (e.g. at http://localhost:8081). This has a number
+of modules (shown as tiles on the welcome page). The main two we will focus on are
+the 'App Inspector' to view your apps, and the 'Blueprint Composer' to write new
+graphical blueprints.
+
+#### App Inspector
+
+Click on the 'App Inspector' tile (or the top-right dropdown) to see a list of apps.
+Click on you app in the list, and expand it to see its structure. The tabs give more
+detail for the selected entity, including:
+
+* 'Sensors' for metrics about the entity.
+* 'Effectors' to invoke operations on the entity.
+* 'Activities' to see task details.
+
+The 'kilt diagram' in the 'Activities' view gives a visual representation of the
+hierarchy and sequence of tasks being that are executed. Failed tasks are coloured
+bright red. Click on a failed task to drill into its details.
+
+#### Blueprint Composer
+
+Click on the 'Blueprint Composer' tile (or the top-right dropdown) to graphically create
+a new blueprint.
+
+For more information, see https://docs.cloudsoft.io/tutorials/tutorial-3-ui-3tier.html
 
 
 ### Catalog
@@ -334,15 +366,22 @@ Catalog bundles and items are versioned. However, if the version suffix ends in
 
 So far, we have just talked about adding things to the catalog.
 
-One can deploy a blueprint, which says which catalog item(s) to deploy and
+One can deploy a blueprint, saying which catalog item(s) to deploy and
 which location(s) to deploy to.
 
-There was an optional step of testing this (step 6 of the [Setup and Run](#setup-and-run)):
+There is a simple example of a blueprint in your local copy of the repository:
+[samples/vanilla-server.yaml](samples/vanilla-server.yaml).
 
 ```yaml
 location: hackathon-cloud
 services:
   - type: server
+```
+
+You can deploy this app by running:
+
+```bash
+br deploy samples/vanilla-server.yaml
 ```
 
 When you use the marketplace tile to deploy, it automatically creates a YAML file
@@ -358,6 +397,14 @@ br deploy samples/app-jar-signer.yaml
 ```
 
 
+### Locations
+
+Locations (see [docs](https://docs.cloudsoft.io/locations/)) are the environments
+to which AMP deploys applications. If using a cloud, you'll need to provide your
+cloud credentials. You should also specify the instance type you want
+(i.e. size of VM), and the choice of VM image.
+
+
 ### Cloudsoft AMP Glossary
 
 There is a [glossary](https://docs.cloudsoft.io/start/concept-quickstart.html)
@@ -370,15 +417,6 @@ For more troubleshooting advice, see the
 [Troubleshooting section of the AMP docs](https://docs.cloudsoft.io/operations/troubleshooting/).
 A few pointers are also given below.
 
-#### Web Console
-
-The activity and state of each entity in the application can be viewed in the AMP
-web console (e.g. at http://localhost:8081). Go to the "App Inspector", click on the
-entity in the tree, and select the 'Activities' tab.
-
-The 'kilt diagram' gives a visual representation of the hierarchy and sequence of
-tasks being that are executed. Failed tasks are coloured bright red. Click on a
-failed task to drill into its details.
 
 #### AMP Logs
 
