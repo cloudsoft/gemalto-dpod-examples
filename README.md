@@ -75,6 +75,7 @@ of time (e.g. waiting for downloads).
 2. Download the docker images:
 
    ```bash
+   docker login -u _json_key --password-stdin https://gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
    docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/amp:latest
    docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/dpod-ui:latest
    ```
@@ -129,9 +130,18 @@ of time (e.g. waiting for downloads).
 
 2. Launch the local docker containers for the DPOD UI, and for Cloudsoft AMP automation server:
 
-   ```bash
-   docker-compose up -d
-   ```
+   1. First you'll need to set up credentials to access the Docker Repository:
+
+      ```bash
+      docker login -u _json_key --password-stdin https://gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
+      ```
+
+   2. Then use [Docker Compose](https://docs.docker.com/compose/) to run the
+      multi-container application:
+
+      ```bash
+      docker-compose up -d
+      ```
 
 3. Go to the DPOD web-console (i.e. http://localhost:8080/).
 

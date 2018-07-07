@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "gemalto-hackathon",
+  "private_key_id": "603254e71c3456f05822232597be1d2d7c82760a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCttI6WQo8cf4OM\n2F6UQbAV+838hOa5JHDdxwGQtSx8RX7k449q8rP3WJmyyEqx4bU2vcIDTtEG6HQp\n+MFCm7eAaHduMpvJn/kOwTvIPRIoZAtuz9giZrH+b36JoypjApbQrYzNUGHPpoRe\nzGMIfpvAbh/jOEQ2goPm2s1ZXEWWH8Sf2KKXPV7Cxy9FltYIjWOrXRhxDeBqWQGT\nfEm0HY5Rw/noBWc4vZaTJfp7SUZ7X/i3brn6jh9mvq9B0psvmp/pJTw0BMakaQR4\nXLWgF8ewvDtFOb/qMLUVBz8b4qoZloG0ZvGg/NYTa4lmQHjUXiM/cbic+s9iNyyD\naDixXuLdAgMBAAECggEAEJHrEXhd8H5Vd90NVfUs1/FXmqFkOlW4kooGTd3f1XxH\no4v1mrfLj7/Flva2RrZc3qZGrfbEcnVAMjTG3WoUnMzaVQps2VSc9y8FsI9AKSw0\npFMdWgK+iKKYHocQZwt7LtgvWJ00shCUtfpR7sstDl6IRNjm4OWdsYA+cH911TZ1\nrqynaD5cJe3I3tGnfEVk1SRfZNx90wVZDgVZlVYPT1iZFCuynQfX+ZW9ijZZU3+u\nND8eiTCp0p4H6XIxsF+3cMt8mfLDcn63CKm2kDKT691QDHGfEnPRhL7/C6VyyUpg\nGd/Bh97i0ZF4Ivk6gtU03BgpxbX1NVZC3ZNvupChXQKBgQDT9k1Cj66/OFLdczaC\nMrtkQPz8kGnVZd3+90NMw8B21bI5qy4m5upU9nVh82k5n6C/8tyVsAKUSzdIhSHJ\nD0avoNY4zRD2lF1ZMsBCGX7EZxOgEM8Z+KihVvKDX1JdKX3sggHsfnHXtQ6fYcO8\njTygh9wsb8w2mAchc5xwW1VI5wKBgQDRy3o6TlOgeIj61bns3XEYI/Y/SfPvFTi8\n4ttajDeAVq/FCcXX1CW9vQ0fOlX5pVbJVbHfX/eKC4YYuSMvoXb1KWihlZQVu9j+\nTRn97HWnv5iVyDqfAaSGNog34autganTqUoPGdE/Z4mTCYXOanDJdv4tjF9UXY7O\nA2dEc+NpmwKBgQCXYAuFQb/26G6loKaJDVovGwqSBUDQGlQUxtnVdOd69tq1vL7V\nIYyw6OKj9YZslMfkzbkjXfQ5nA37SLj8MmC1BRR4tFss/oA8N7Z+fl6+PS8S3W5K\nif9EWigQEn9r8TnxMlfVYehDuRacVOHJQsTNkLl5Ms6RHrnY9gv/YfrieQKBgQCq\nifdv0iAUwCbJkFc0/sViVElmJR2P6fZXRSn+ryCmyNDVIR6cVa3gUP+LtQYSi57C\nx1ByPjahFsEI8+ZwX5atr92IDGl2SV8ZSV+plEAH/q1whHVysAknuMh+dInz3wVI\nM8MqB1iba/Tfe8wzgT7x5jK0n/kWQX9GZGnbsUDZpQKBgQDIml1R6mnboUI6BLMD\nSb+4E2b5D6XlcKl2jxR4XFrao87zTBoygFAADZ9htp0WYKtyPnrUQD42kBceiklv\naZmIg2cqEoxu7mcZqoIIj8Fm+I0sacPWdVgc+Z12WzpF8vS0NpanCmhrXCYQcxrY\nYjzBrW34kREPEio8zt0ORNpa/Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "hackathon-attendees@gemalto-hackathon.iam.gserviceaccount.com",
+  "client_id": "114359268552564351312",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hackathon-attendees%40gemalto-hackathon.iam.gserviceaccount.com"
+}
