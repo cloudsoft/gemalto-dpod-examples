@@ -75,7 +75,7 @@ of time (e.g. waiting for downloads).
 2. Download the docker images:
 
    ```bash
-   docker login -u _json_key --password-stdin https://gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
+   docker login -u _json_key --password-stdin https://eu.gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
    docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/amp:latest
    docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/dpod-ui:latest
    ```
@@ -132,7 +132,7 @@ of time (e.g. waiting for downloads).
    1. First you'll need to set up credentials to access the Docker Repository:
 
       ```bash
-      docker login -u _json_key --password-stdin https://gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
+      docker login -u _json_key --password-stdin https://eu.gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
       ```
 
    2. Then use [Docker Compose](https://docs.docker.com/compose/) to run the
