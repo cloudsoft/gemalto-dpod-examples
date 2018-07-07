@@ -85,11 +85,10 @@ of time (e.g. waiting for downloads).
 
    1. Download from http://developers-origin.cloudsoftcorp.com/amp-cli/5.2.0/
 
-   2. Make the file executable: `chmod u+x br`
-
-   3. Add the file to your path. For example:
+   2. Make the file executable, and add it to your path. For example:
 
       ```bash
+      chmod u+x br
       mkdir ~/bin/
       mv br ~/bin/
       echo "export PATH=$PATH:~/bin/" >> ~/.bashrc
@@ -262,7 +261,7 @@ docker-compose down
 
 ## Customizing the Automation
 
-The [Setup and Run](#setup-and-run) steps above used the "DPOD Jar Signer" as an example.
+The [Setup and Running](#setup-and-running) steps above used the "DPOD Jar Signer" as an example.
 You can use this example as a starting point for your use-case.
 
 The file structure is:
@@ -381,7 +380,7 @@ The 'kilt diagram' gives a visual representation of the hierarchy and sequence o
 tasks being that are executed. Failed tasks are coloured bright red. Click on a
 failed task to drill into its details.
 
-### AMP Logs
+#### AMP Logs
 
 View the AMP log file in `docker/amp/log/` (this directory on your local machine
 is mounted in the AMP container).
