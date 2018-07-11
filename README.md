@@ -55,9 +55,7 @@ These steps will involve us working with several different machines:
 
 3. [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) installed locally.
 
-4. A github account, for sharing private repos with you.
-
-5. Ability to provision a VM (in a cloud of your choice), or ssh access to a pre-existing machine
+4. Ability to provision a VM (in a cloud of your choice), or ssh access to a pre-existing machine
    on which automated commands can be run.
 
    This machine will require outbound internet access, to DPOD and to install additional packages
@@ -75,7 +73,6 @@ of time (e.g. waiting for downloads).
 2. Download the docker images:
 
    ```bash
-   docker login -u _json_key --password-stdin https://eu.gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
    docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/amp:latest
    docker pull eu.gcr.io/gemalto-hackathon/cloudsoft/dpod-ui:latest
    ```
@@ -134,18 +131,12 @@ of time (e.g. waiting for downloads).
 
 2. Launch the local docker containers for the DPOD UI, and for Cloudsoft AMP automation server:
 
-   1. First you'll need to set up credentials to access the Docker Repository:
+   Use [Docker Compose](https://docs.docker.com/compose/) to run the
+   multi-container application:
 
-      ```bash
-      docker login -u _json_key --password-stdin https://eu.gcr.io < docker/creds/gemalto-hackathon-603254e71c34.json
-      ```
-
-   2. Then use [Docker Compose](https://docs.docker.com/compose/) to run the
-      multi-container application:
-
-      ```bash
-      docker-compose up -d
-      ```
+   ```bash
+   docker-compose up -d
+   ```
 
 3. Go to the DPOD web-console (i.e. http://localhost:8080/).
 
